@@ -1,0 +1,28 @@
+# colcon workspace artefacts
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Model weights and large data (downloaded or produced locally, never committed)
+/models/
+*.pth
+*.pt
+*.onnx
+/data/
+
+# Outputs of the simulation checks and experiments
+sim_check_*/
+/results/
+
+# OS and editors
+.DS_Store
+.vscode/
+.idea/
