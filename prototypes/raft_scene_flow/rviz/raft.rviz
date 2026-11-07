@@ -1,0 +1,75 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+
+Visualization Manager:
+  Class: ""
+  Enabled: true
+
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: camera_model/camera_link/rgbd_camera
+    Frame Rate: 30
+
+  Displays:
+
+    - Class: rviz_default_plugins/Grid
+      Enabled: true
+      Name: Grid
+      Plane: XY
+      Plane Cell Count: 20
+      Cell Size: 1
+      Alpha: 0.5
+
+    - Class: rviz_default_plugins/PointCloud2
+      Enabled: true
+      Name: RAFT Point Cloud
+      Topic: /raft/points
+      Queue Size: 5
+      Style: Spheres
+      Size (m): 0.05
+      Color Transformer: RGB8
+      Selectable: true
+
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: RAFT Velocity
+      Topic: /raft_flow/markers
+      Queue Size: 10
+
+    - Class: rviz_default_plugins/PointCloud2
+      Enabled: false
+      Name: Velocity Field
+      Topic: /raft/velocity_field
+      Queue Size: 0.05
+      Style: Spheres
+      Size (m): 5
+      Color Transformer: FlatColor
+      Selectable: true
+
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+    - Class: rviz_default_plugins/PublishPoint
+
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 5
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0
+      Pitch: 0.5
+      Yaw: 0.5
+      Target Frame: camera_model/camera_link/rgbd_camera
+      Name: Current View
+
+Window Geometry:
+  Height: 900
+  Width: 1400
