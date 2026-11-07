@@ -29,9 +29,9 @@ Every new terminal needs `source /opt/ros/jazzy/setup.bash` and `source install/
 
 Run `git pull`, then `rosdep install --from-paths src --ignore-src -y` and `colcon build --symlink-install` again.
 
-## Check your machine
+## System check
 
-Run this once and share the output with the team:
+If something does not build or run, paste the output of these commands when you ask for help:
 
 ```bash
 lsb_release -ds; printenv ROS_DISTRO; gz sim --versions; nproc; free -h | head -2
