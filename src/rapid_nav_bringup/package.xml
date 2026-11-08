@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>rapid_nav_bringup</name>
+  <version>0.1.0</version>
+  <description>Launch files, odometry (robot_localization EKF) and RViz configuration of the RAPID-NAV simulation.</description>
+  <maintainer email="harsh.v.sharma@outlook.com">Harsh Vardhan</maintainer>
+  <license>MIT</license>
+
+  <author>Rishi Atreya</author>
+  <author>Kamalesh Kumar B</author>
+  <author>Jaspinder Kaur</author>
+  <author>Harsh Vardhan</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>rapid_nav_gazebo</exec_depend>
+  <exec_depend>rapid_nav_description</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+
+  <test_depend>ament_cmake_pytest</test_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_cmake_flake8</test_depend>
+  <test_depend>ament_cmake_pep257</test_depend>
+  <test_depend>python3-yaml</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
