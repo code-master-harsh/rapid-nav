@@ -1,0 +1,7 @@
+# Wheel odometry transform from the DiffDrive plugin, used only with odom_tf:=wheel (never together
+# with the EKF, which publishes odom -> base_footprint itself).
+- ros_topic_name: /tf
+  gz_topic_name: /wheel_odom_tf
+  ros_type_name: tf2_msgs/msg/TFMessage
+  gz_type_name: gz.msgs.Pose_V
+  direction: GZ_TO_ROS

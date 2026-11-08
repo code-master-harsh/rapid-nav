@@ -14,6 +14,13 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <exec_depend>rapid_nav_description</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+
   <test_depend>ament_cmake_pytest</test_depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_cmake_flake8</test_depend>
@@ -21,6 +28,7 @@
   <test_depend>ros_gz_sim</test_depend>
   <test_depend>python3-numpy</test_depend>
   <test_depend>python3-pil</test_depend>
+  <test_depend>python3-yaml</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

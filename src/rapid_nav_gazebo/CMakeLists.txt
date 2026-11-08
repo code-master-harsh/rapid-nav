@@ -3,7 +3,7 @@ project(rapid_nav_gazebo)
 
 find_package(ament_cmake REQUIRED)
 
-install(DIRECTORY worlds models
+install(DIRECTORY worlds models config launch
   DESTINATION share/${PROJECT_NAME}
 )
 
@@ -15,6 +15,10 @@ if(BUILD_TESTING)
 
   ament_add_pytest_test(test_world test/test_world.py
     TIMEOUT 240
+  )
+
+  ament_add_pytest_test(test_launch test/test_launch.py
+    TIMEOUT 120
   )
 endif()
 
