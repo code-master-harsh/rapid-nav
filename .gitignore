@@ -8,6 +8,8 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 .venv/
 venv/
 
@@ -22,7 +24,21 @@ venv/
 sim_check_*/
 /results/
 
+# Files the simulation check procedure writes to the repository root (docs/sim-checks.md)
+frames_*.pdf
+frames_*.gv
+/frames.pdf
+/*.png
+/*.zip
+
+# ROS bags
+rosbag2_*/
+*.mcap
+*.db3
+
 # OS and editors
 .DS_Store
 .vscode/
 .idea/
+*.swp
+*~
