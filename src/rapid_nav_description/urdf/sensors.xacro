@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<!-- Turret, lidar, RGB-D camera (with its optical frame) and IMU, with their Gazebo sensor blocks. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Turret: a short post that carries the lidar. -->
+  <link name="turret_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${turret_radius}" length="${turret_length}"/>
+      </geometry>
+      <material name="graphite"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${turret_radius}" length="${turret_length}"/>
+      </geometry>
+    </collision>
+    <xacro:solid_cylinder_inertial mass="${turret_mass}" radius="${turret_radius}" length="${turret_length}"/>
+  </link>
+
+  <joint name="turret_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="turret_link"/>
+    <origin xyz="0 0 ${turret_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- 2D lidar: its scan plane is the lidar_link origin. -->
+  <link name="lidar_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${lidar_radius}" length="${lidar_length}"/>
+      </geometry>
+      <material name="lidar_black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${lidar_radius}" length="${lidar_length}"/>
+      </geometry>
+    </collision>
+    <xacro:solid_cylinder_inertial mass="${lidar_mass}" radius="${lidar_radius}" length="${lidar_length}"/>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="0 0 ${lidar_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- RGB-D camera body. The image frame is camera_optical_frame (z forward, x right, y down). -->
+  <link name="camera_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${camera_box_x} ${camera_box_y} ${camera_box_z}"/>
+      </geometry>
+      <material name="camera_grey"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${camera_box_x} ${camera_box_y} ${camera_box_z}"/>
+      </geometry>
+    </collision>
+    <xacro:solid_box_inertial mass="${camera_mass}" x="${camera_box_x}" y="${camera_box_y}" z="${camera_box_z}"/>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="${camera_x} 0 ${camera_z}" rpy="0 ${camera_pitch} 0"/>
+  </joint>
+
+  <link name="camera_optical_frame"/>
+
+  <joint name="camera_optical_joint" type="fixed">
+    <parent link="camera_link"/>
+    <child link="camera_optical_frame"/>
+    <origin xyz="0 0 0" rpy="${camera_optical_roll} ${camera_optical_pitch} ${camera_optical_yaw}"/>
+  </joint>
+
+  <!-- IMU: a tiny box inside the body, only for its inertial frame. -->
+  <link name="imu_link">
+    <xacro:solid_box_inertial mass="${imu_mass}" x="${imu_size}" y="${imu_size}" z="${imu_size}"/>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 ${imu_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Gazebo sensors (Gazebo Harmonic). -->
+  <gazebo reference="camera_link">
+    <sensor name="rgbd_camera" type="rgbd_camera">
+      <always_on>true</always_on>
+      <update_rate>${camera_rate}</update_rate>
+      <visualize>false</visualize>
+      <topic>camera</topic>
+      <gz_frame_id>camera_optical_frame</gz_frame_id>
+      <camera>
+        <horizontal_fov>${camera_hfov}</horizontal_fov>
+        <image>
+          <width>${camera_width}</width>
+          <height>${camera_height}</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>${camera_clip_near}</near>
+          <far>${camera_clip_far}</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>${camera_noise_stddev}</stddev>
+        </noise>
+        <depth_camera>
+          <clip>
+            <near>${camera_clip_near}</near>
+            <far>${camera_clip_far}</far>
+          </clip>
+        </depth_camera>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="imu_link">
+    <sensor name="imu" type="imu">
+      <always_on>true</always_on>
+      <update_rate>${imu_rate}</update_rate>
+      <topic>imu</topic>
+      <gz_frame_id>imu_link</gz_frame_id>
+      <imu>
+        <angular_velocity>
+          <x>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>${imu_gyro_noise_stddev}</stddev>
+              <bias_mean>0.0</bias_mean>
+              <bias_stddev>${imu_gyro_bias_stddev}</bias_stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>${imu_gyro_noise_stddev}</stddev>
+              <bias_mean>0.0</bias_mean>
+              <bias_stddev>${imu_gyro_bias_stddev}</bias_stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>${imu_gyro_noise_stddev}</stddev>
+              <bias_mean>0.0</bias_mean>
+              <bias_stddev>${imu_gyro_bias_stddev}</bias_stddev>
+            </noise>
+          </z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>${imu_accel_noise_stddev}</stddev>
+              <bias_mean>0.0</bias_mean>
+              <bias_stddev>${imu_accel_bias_stddev}</bias_stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>${imu_accel_noise_stddev}</stddev>
+              <bias_mean>0.0</bias_mean>
+              <bias_stddev>${imu_accel_bias_stddev}</bias_stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>${imu_accel_noise_stddev}</stddev>
+              <bias_mean>0.0</bias_mean>
+              <bias_stddev>${imu_accel_bias_stddev}</bias_stddev>
+            </noise>
+          </z>
+        </linear_acceleration>
+      </imu>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="lidar_link">
+    <sensor name="lidar" type="gpu_lidar">
+      <always_on>true</always_on>
+      <update_rate>${lidar_rate}</update_rate>
+      <visualize>false</visualize>
+      <topic>scan</topic>
+      <gz_frame_id>lidar_link</gz_frame_id>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>${lidar_samples}</samples>
+            <resolution>1</resolution>
+            <min_angle>${lidar_min_angle}</min_angle>
+            <max_angle>${lidar_max_angle}</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>0.0</min_angle>
+            <max_angle>0.0</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>${lidar_range_min}</min>
+          <max>${lidar_range_max}</max>
+          <resolution>${lidar_range_resolution}</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>${lidar_noise_stddev}</stddev>
+        </noise>
+      </lidar>
+    </sensor>
+  </gazebo>
+
+</robot>

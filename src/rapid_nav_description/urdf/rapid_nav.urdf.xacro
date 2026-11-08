@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!-- RAPID-NAV: a differential-drive service robot with an RGB-D camera, an IMU and a 2D lidar.
+     Units: metres, radians, kilograms. Numbers live in properties.xacro. -->
+<robot name="rapid_nav" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="camera_width" default="640"/>
+  <xacro:arg name="camera_height" default="480"/>
+  <xacro:arg name="camera_rate" default="30"/>
+  <xacro:arg name="camera_hfov" default="1.211"/>
+  <xacro:arg name="camera_pitch" default="0.0"/>
+
+  <xacro:include filename="properties.xacro"/>
+  <xacro:include filename="materials.xacro"/>
+  <xacro:include filename="inertials.xacro"/>
+
+  <!-- Camera arguments become plain properties for the sensor blocks. -->
+  <xacro:property name="camera_width" value="$(arg camera_width)"/>
+  <xacro:property name="camera_height" value="$(arg camera_height)"/>
+  <xacro:property name="camera_rate" value="$(arg camera_rate)"/>
+  <xacro:property name="camera_hfov" value="$(arg camera_hfov)"/>
+  <xacro:property name="camera_pitch" value="$(arg camera_pitch)"/>
+
+  <xacro:include filename="base.xacro"/>
+  <xacro:include filename="sensors.xacro"/>
+  <xacro:include filename="gazebo.xacro"/>
+
+</robot>

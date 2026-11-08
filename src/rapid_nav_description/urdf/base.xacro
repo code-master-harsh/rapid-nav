@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<!-- Body, driving wheels and casters. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <link name="base_footprint"/>
+
+  <joint name="base_link_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 ${base_link_height}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 ${chassis_z}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${chassis_radius}" length="${chassis_length}"/>
+      </geometry>
+      <material name="graphite"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${chassis_z}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${chassis_radius}" length="${chassis_length}"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 ${deck_z}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${deck_radius}" length="${deck_length}"/>
+      </geometry>
+      <material name="deck_white"/>
+    </visual>
+    <visual>
+      <origin xyz="0 0 ${bumper_z}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${bumper_radius}" length="${bumper_length}"/>
+      </geometry>
+      <material name="bumper_orange"/>
+    </visual>
+    <visual>
+      <origin xyz="${mount_x} 0 ${mount_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${mount_size_x} ${mount_size_y} ${mount_size_z}"/>
+      </geometry>
+      <material name="graphite"/>
+    </visual>
+    <xacro:solid_cylinder_inertial mass="${chassis_mass}" radius="${chassis_radius}"
+                                   length="${chassis_length}" xyz="0 0 ${chassis_z}"/>
+  </link>
+
+  <xacro:macro name="wheel" params="side y">
+    <link name="${side}_wheel_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="${wheel_roll} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+        </geometry>
+        <material name="tyre_black"/>
+      </visual>
+      <visual>
+        <origin xyz="0 0 0" rpy="${wheel_roll} 0 0"/>
+        <geometry>
+          <cylinder radius="${hub_radius}" length="${hub_length}"/>
+        </geometry>
+        <material name="hub_grey"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${wheel_roll} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+        </geometry>
+      </collision>
+      <xacro:solid_cylinder_inertial mass="${wheel_mass}" radius="${wheel_radius}"
+                                     length="${wheel_length}" rpy="${wheel_roll} 0 0"/>
+    </link>
+    <joint name="${side}_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${side}_wheel_link"/>
+      <origin xyz="0 ${y} 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel side="left" y="${wheel_y}"/>
+  <xacro:wheel side="right" y="${-wheel_y}"/>
+
+  <xacro:macro name="caster" params="side x">
+    <link name="${side}_caster_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="${caster_radius}"/>
+        </geometry>
+        <material name="caster_grey"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="${caster_radius}"/>
+        </geometry>
+      </collision>
+      <xacro:solid_sphere_inertial mass="${caster_mass}" radius="${caster_radius}"/>
+    </link>
+    <joint name="${side}_caster_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${side}_caster_link"/>
+      <origin xyz="${x} 0 ${caster_z}" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:caster side="front" x="${caster_x}"/>
+  <xacro:caster side="rear" x="${-caster_x}"/>
+
+</robot>
