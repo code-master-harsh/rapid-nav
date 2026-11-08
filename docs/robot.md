@@ -56,7 +56,7 @@ The camera's size, rate and field of view are xacro arguments: `camera_width`, `
 | `/clock` | `rosgraph_msgs/msg/Clock` | Gazebo → ROS | simulated time |
 | `/cmd_vel` | `geometry_msgs/msg/Twist` | ROS → Gazebo | drive command |
 | `/odom` | `nav_msgs/msg/Odometry` | Gazebo → ROS | wheel odometry, 50 Hz |
-| `/joint_states` | `sensor_msgs/msg/JointState` | Gazebo → ROS | the two wheel joints |
+| `/joint_states` | `sensor_msgs/msg/JointState` | Gazebo → ROS | the two wheel joints, 50 Hz |
 | `/imu` | `sensor_msgs/msg/Imu` | Gazebo → ROS | 200 Hz |
 | `/scan` | `sensor_msgs/msg/LaserScan` | Gazebo → ROS | 10 Hz |
 | `/camera/image` | `sensor_msgs/msg/Image` | Gazebo → ROS | `rgb8`, 30 Hz |

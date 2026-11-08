@@ -82,5 +82,6 @@
   <xacro:property name="wheel_max_linear_acceleration" value="1.0"/>
   <xacro:property name="wheel_max_angular_acceleration" value="3.0"/>
   <xacro:property name="odom_publish_frequency" value="50"/>
+  <xacro:property name="joint_state_rate" value="50"/>
 
 </robot>

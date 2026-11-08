@@ -139,6 +139,14 @@ def test_sensors_and_plugins(model):
     assert plugins == EXPECTED_PLUGINS
 
 
+def test_joint_states_are_published_at_50_hz(model):
+    """The joint state plugin has an update rate, so it does not publish every physics step."""
+    root, _ = model
+    plugin = next(plugin for plugin in root.iter('plugin')
+                  if plugin.get('filename') == 'gz-sim-joint-state-publisher-system')
+    assert plugin.find('update_rate').text == '50'
+
+
 def test_camera_follows_the_arguments():
     """The camera's size and rate follow the xacro arguments."""
     root, _ = build(camera_width=320, camera_height=240, camera_rate=15)
