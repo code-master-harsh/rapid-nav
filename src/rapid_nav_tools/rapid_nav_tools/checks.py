@@ -74,7 +74,7 @@ def colourise_depth(depth, near, far):
 
 def scan_image(ranges, angle_min, increment, size_px, max_range):
     """
-    Return a top-down uint8 RGB view of a laser scan: robot at the centre, x up, y left.
+    Return a top-down uint8 RGB view of a laser scan: robot at the centre, x right, y up.
 
     Each finite return inside max_range is drawn as a white pixel; the robot is a red pixel.
     """

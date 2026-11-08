@@ -6,11 +6,12 @@ Start the simulation first (ros2 launch rapid_nav_bringup sim.launch.py), then r
     ros2 run rapid_nav_tools sim_check [--out DIR] [--duration S] [--profile native|docker]
                                        [--odom-tf ekf|wheel] [--no-drive]
 
-It measures the topic rates, checks the content of the camera, depth, IMU and lidar, checks the
+It waits until the robot has rested on the floor for 2 s of simulated time (it is spawned 1 cm up),
+then measures the topic rates, checks the content of the camera, depth, IMU and lidar, checks the
 TF tree and, unless --no-drive is given, drives the robot 1.2 m forward and then turns it 180
-degrees in place, comparing the odometry with the simulator's ground truth. The bundle in DIR
-holds environment.txt, results.json, summary.md, tf_frames.yaml, rgb.png, depth.png and scan.png.
-The summary table is printed as well. The exit status is 0 when no check fails, else 1.
+degrees in place, comparing the odometry with the simulator's ground truth. The bundle in DIR holds
+environment.txt, results.json, summary.md, tf_frames.yaml, rgb.png, depth.png and scan.png. The
+summary table is printed as well. The exit status is 0 when no check fails, else 1.
 """
 
 import argparse
@@ -51,7 +52,7 @@ import tf2_ros
 EXPECTED_RATES = {
     '/odom': 50.0,
     '/odometry/filtered': 50.0,
-    '/joint_states': 30.0,
+    '/joint_states': 50.0,
     '/imu': 200.0,
     '/scan': 10.0,
     '/camera/image': 30.0,
@@ -63,6 +64,8 @@ CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
 CAMERA_HFOV = 1.211
 CLOCK_WAIT_S = 60.0
+SETTLE_WAIT_S = 60.0
+SETTLE_SIM_S = 2.0
 TF_SETTLE_S = 2.0
 CMD_PERIOD_S = 0.05
 DRIVE_SPEED = 0.3
@@ -235,6 +238,22 @@ class SimCheck(Node):
         while time.monotonic() < end:
             rclpy.spin_once(self, timeout_sec=0.05)
             if self.stamps['/clock']:
+                return True
+        return False
+
+    def wait_until_settled(self, settle, timeout):
+        """
+        Return True once ground truth has arrived and `settle` simulated seconds have passed.
+
+        The robot is spawned 1 cm above the floor; the at-rest checks must not see it land.
+        """
+        end = time.monotonic() + timeout
+        first = None
+        while time.monotonic() < end:
+            rclpy.spin_once(self, timeout_sec=0.05)
+            if first is None and self.latest.get('/ground_truth/odom') is not None:
+                first = self.sim_now()
+            if first is not None and self.sim_now() - first >= settle:
                 return True
         return False
 
@@ -590,6 +609,11 @@ def main(argv=None):
         if not node.wait_for_clock(CLOCK_WAIT_S):
             report.add('/clock', 'none', 'messages within {:.0f} s'.format(CLOCK_WAIT_S), 'FAIL')
         else:
+            settled = node.wait_until_settled(SETTLE_SIM_S, SETTLE_WAIT_S)
+            report.add('robot settled', 'yes' if settled else 'no',
+                       'ground truth, then {:.0f} s of sim time within {:.0f} s'.format(
+                           SETTLE_SIM_S, SETTLE_WAIT_S),
+                       verdict_of(settled))
             rates, rtf = node.measure_rates(args.duration)
             for topic, row in rates.items():
                 report.add('rate {}'.format(topic),
