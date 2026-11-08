@@ -46,7 +46,7 @@ def launch_setup(context):
         for name, _ in CAMERA_ARGUMENTS
     ]
     description = ParameterValue(
-        Command(['xacro ', model, ' '] + camera_arguments), value_type=str
+        Command(['xacro ', model, ' ', ' '.join(camera_arguments)]), value_type=str
     )
     node = Node(
         package='robot_state_publisher',
