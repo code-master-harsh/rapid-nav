@@ -32,9 +32,16 @@ stage named in the [README](../README.md) status table.
    The geometry-only baseline is Nav2's standard obstacle layer. The measures are collision rate, minimum clearance,
    success, time to goal, path length, replanning count, perception latency and RAFT share.
 
-## Frames (planned)
+## Frames
+
+The robot's frames are implemented in S1 and match the frame table in [robot.md](robot.md):
 
 ```
-map → odom → base_footprint → base_link → { camera_link → camera_optical_frame,
-                                            imu_link, lidar_link, wheels, casters }
+odom → base_footprint → base_link → { camera_link → camera_optical_frame,
+                                      imu_link, lidar_link, turret_link,
+                                      left_wheel_link, right_wheel_link,
+                                      front_caster_link, rear_caster_link }
 ```
+
+`odom → base_footprint` comes from one publisher only: the robot_localization EKF by default, or the simulator's
+differential-drive transform with `odom_tf:=wheel`. The `map` frame is added with localisation in S5.
